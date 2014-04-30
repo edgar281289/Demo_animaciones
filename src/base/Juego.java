@@ -68,7 +68,7 @@ public class Juego extends JFrame implements Runnable {
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float radio = 1f;
         float posX = 0f;
-        float posY = 1f, posZ = 1f;
+        float posY = 2f, posZ = 1f;
         personaje = new FiguraMDL(0.4f, 0.3f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
         personaje.crearPropiedades(posX, posY, posZ);
 
@@ -80,7 +80,8 @@ public class Juego extends JFrame implements Runnable {
         //perseguidor.crearPropiedades( 3, 0, 0);
         //perseguidor.asignarObjetivo(personaje,15f);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
         //Creacion de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
-        utilidades.TerrenoSimple terreno = new utilidades.TerrenoSimple(50, 50, -25, -0.1f, -12, "unaTextura_Desabilitada", conjunto);
+        utilidades.TerrenoSimple terreno = new utilidades.TerrenoSimple(100, 100, -25, -0.1f, -12, "unaTextura_Desabilitada", conjunto);
+        
         return objRoot;
     }
 
@@ -89,6 +90,8 @@ public class Juego extends JFrame implements Runnable {
         for (int i = 0; i < this.listaObjetosFisicos.size(); i++) {
             listaObjetosFisicos.get(i).actualizar(dt);
         }
+        
+        colocarCamara(universo, new Point3d(0f,5f,0f) , new Point3d(personaje.posiciones[0],personaje.posiciones[1],personaje.posiciones[2]));
     }
 
     void mostrar() throws Exception {

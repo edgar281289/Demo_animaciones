@@ -1,6 +1,7 @@
 package utilidades;
 import javax.media.j3d.*;
 import com.sun.j3d.utils.geometry.*;
+import com.sun.j3d.utils.picking.PickTool;
 import javax.vecmath.*;
 import java.util.Random;
 import java.util.ArrayList;
@@ -126,7 +127,16 @@ public class TerrenoSimple extends BranchGroup {
           subvertices.add(vertices.get(i));
           if (subvertices.size()>=4){
                  BranchGroup x = new BranchGroup();
-                 x.addChild( crearPlaca(subvertices));
+                 
+                 /**
+                  * Añadido código para que se encuentre el terrano (Pickable)
+                  */
+                 terreno = crearPlaca(subvertices);
+                 PickTool.setCapabilities(terreno, PickTool.INTERSECT_FULL);
+                 terreno.setUserData("terreno");
+                 terreno.setPickable(true);
+                 
+                 x.addChild( terreno );
                  TGterreno.addChild(x);
                  subvertices= new ArrayList<Vector3f> ();
           }
