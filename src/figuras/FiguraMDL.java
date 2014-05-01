@@ -21,7 +21,8 @@ public class FiguraMDL extends Figura {
     Vector3d direccion =new Vector3d(0,0,10);
     public float radio, alturaP,  alturaDeOjos;
     boolean esPersonaje;
-    boolean animacion_lanzada = false;
+    boolean animacion_caminando_lanzada = false;
+    boolean animacion_corriendo_lanzada = false;
 
    public FiguraMDL(float radio_, float altura_,String ficheroMDL, float radio,  BranchGroup conjunto,  ArrayList<Figura> listaObjetos, Juego juego, boolean esPersonaje){
       super(radio_, altura_, conjunto,  listaObjetos, juego);
@@ -62,7 +63,7 @@ TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala){
                  nombreAnimacionCaminando= "iron_golem:cwalk";
                  nombreAnimacionQuieto= "iron_golem:cpause1";
                  nombreAnimacionLuchando= "iron_golem:run";//"iron_golem:ca1slashl";
-                rotacionX = -1.5f; rotacionZ = 3.9f; escalaTamano=0.65f;
+                rotacionX = -1.5f; rotacionZ = 3.14f; escalaTamano=0.65f;
                 desplazamientoY=-1f;
                 alturaP= (float) 3f*escalaTamano;
                 alturaDeOjos= alturaP;
@@ -118,15 +119,28 @@ boolean guerra =false;
 public void actualizar(float dt){
     super.actualizar(dt);
 
-    if(juego.personaje.caminando && (animacion_lanzada == false)){
+    /*
+    System.out.println("\n\nMovimientos" );
+    System.out.println("---------" );
+    System.out.println("El pj está corriendo: " + juego.personaje.corriendo + " y el flag esta " + animacion_corriendo_lanzada );
+    System.out.println("El pj está caminando: " + juego.personaje.caminando + " y el flag esta " + animacion_caminando_lanzada );
+    System.out.println("\n\n" );
+    */
+    
+    if(juego.personaje.corriendo && animacion_corriendo_lanzada == false ){
+        ab.playAnimation(nombreAnimacionCorriendo,true);
+        animacion_corriendo_lanzada = true;
+    }else if(juego.personaje.caminando && (animacion_caminando_lanzada == false)){
         ab.playAnimation(nombreAnimacionCaminando,true);
-        animacion_lanzada = true;
+        animacion_caminando_lanzada = true;        
+        animacion_corriendo_lanzada = false;
+    }else if((juego.personaje.quieto && animacion_caminando_lanzada == true) || juego.personaje.quieto && animacion_corriendo_lanzada == true ){
+        ab.playAnimation(nombreAnimacionQuieto,true);
+        animacion_corriendo_lanzada = false;
+        animacion_caminando_lanzada = false;
     }
     
-    if(juego.personaje.quieto && juego.personaje.caminando == false && animacion_lanzada == true){
-        ab.playAnimation(nombreAnimacionQuieto,true);
-        animacion_lanzada = false;
-    }
+    
     //else ab.playAnimation(nombreAnimacionQuieto,true);
     //if(juego.personaje.caminando) ab.playAnimation(nombreAnimacionCaminando, true);
     //else ab.playAnimation(nombreAnimacionQuieto, true);

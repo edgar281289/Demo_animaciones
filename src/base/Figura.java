@@ -173,7 +173,7 @@ public class Figura {
         this.desplazamientoFigura.getTransform(t3dPersonaje);
         Transform3D copiat3dPersonaje = new Transform3D(t3dPersonaje);
         Transform3D t3dSonar = new Transform3D();
-        t3dSonar.set(new Vector3f(10.0f, 0, 10f));
+        t3dSonar.set(new Vector3f(0.0f, 0, 10f));
         copiat3dPersonaje.mul(t3dSonar);
         Vector3d posSonar = new Vector3d(0, 0, 0);
         copiat3dPersonaje.get(posSonar);

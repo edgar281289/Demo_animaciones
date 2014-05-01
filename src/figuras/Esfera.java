@@ -11,11 +11,9 @@ public class Esfera extends Figura {
     public Esfera(float radio_, float altura_, BranchGroup conjunto, ArrayList<Figura> listaObjetosFisicos, Juego juego) {
         super(radio_, altura_, conjunto, listaObjetosFisicos, juego);
     }
-/*
-  public  Esfera(float radio, String textura, BranchGroup conjunto, ArrayList<Figura> listaObjetosFisicos, Juego juego) {
-      
-      super(conjunto, listaObjetosFisicos, juego);   //Si se desea programar una clase Esfera, su constrctor tendr’a esta linea
 
+  public  Esfera(float radio, String textura, BranchGroup conjunto, ArrayList<Figura> listaObjetosFisicos, Juego juego) {
+      super(radio, 1, conjunto,  listaObjetosFisicos, juego);   //Si se desea programar una clase Esfera, su constrctor tendr’a esta linea
         //Creando una apariencia
         Appearance apariencia = new Appearance();
         Texture tex = new TextureLoader(System.getProperty("user.dir") + "//" + textura, juego).getTexture();
@@ -30,6 +28,6 @@ public class Esfera extends Figura {
         desplazamientoFigura.addChild(figuraVisual);
         this.conjunto = conjunto;
  }
-    */
+    
 
 }

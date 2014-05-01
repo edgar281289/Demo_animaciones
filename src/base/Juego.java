@@ -31,11 +31,11 @@ public class Juego extends JFrame implements Runnable {
         zonaDibujo.setPreferredSize(new Dimension(800, 600));
         GranPanel.add(zonaDibujo, BorderLayout.CENTER);
         universo = new SimpleUniverse(zonaDibujo);
-/*
+
         OrbitBehavior B = new OrbitBehavior(zonaDibujo);
         B.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
         universo.getViewingPlatform().setViewPlatformBehavior(B);
-*/
+
         BranchGroup escena = crearEscena();
         escena.compile();
         universo.getViewingPlatform().setNominalViewingTransform();
@@ -70,13 +70,14 @@ public class Juego extends JFrame implements Runnable {
         float posX = 0f;
         float posY = 0f, posZ = 0f;
         personaje = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
+        //personaje = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Dire_Cat.mdl", radio, conjunto, listaObjetosFisicos, this, true);
         personaje.crearPropiedades(posX, posY, posZ);
 
         DeteccionControlPersonaje mueve = new DeteccionControlPersonaje(personaje);
         mueve.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
         conjunto.addChild(mueve);
 
-      //perseguidor = new Esfera (radio, "texturas//bosques2.jpg", conjunto, listaObjetosFisicos, this);
+        //perseguidor = new Esfera (radio, "texturas//bosques2.jpg", conjunto, listaObjetosFisicos, this);
         //perseguidor.crearPropiedades( 3, 0, 0);
         //perseguidor.asignarObjetivo(personaje,15f);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
         //Creacion de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
@@ -92,8 +93,6 @@ public class Juego extends JFrame implements Runnable {
         }
         
         Vector3d direccion = personaje.conseguirDireccionFrontal();
-        
-        System.out.println(direccion);
         
         colocarCamara(universo,
                 new Point3d( personaje.posiciones[0] - direccion.getX(), personaje.posiciones[1] - direccion.getY() + personaje.altura, personaje.posiciones[2] - direccion.getZ()),
@@ -148,6 +147,6 @@ public class Juego extends JFrame implements Runnable {
         x.setExtendedState(JFrame.MAXIMIZED_BOTH);
         x.setVisible(true);
         x.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        x.colocarCamara(x.universo, new Point3d(-3, 8f, 22f), new Point3d(3, 0, 0));
+        //x.colocarCamara(x.universo, new Point3d(-3, 8f, 22f), new Point3d(3, 0, 0));
     }
 }
