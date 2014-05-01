@@ -31,11 +31,11 @@ public class Juego extends JFrame implements Runnable {
         zonaDibujo.setPreferredSize(new Dimension(800, 600));
         GranPanel.add(zonaDibujo, BorderLayout.CENTER);
         universo = new SimpleUniverse(zonaDibujo);
-
+/*
         OrbitBehavior B = new OrbitBehavior(zonaDibujo);
         B.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
         universo.getViewingPlatform().setViewPlatformBehavior(B);
-
+*/
         BranchGroup escena = crearEscena();
         escena.compile();
         universo.getViewingPlatform().setNominalViewingTransform();
@@ -68,8 +68,8 @@ public class Juego extends JFrame implements Runnable {
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float radio = 1f;
         float posX = 0f;
-        float posY = 2f, posZ = 1f;
-        personaje = new FiguraMDL(0.4f, 0.3f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
+        float posY = 0f, posZ = 0f;
+        personaje = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
         personaje.crearPropiedades(posX, posY, posZ);
 
         DeteccionControlPersonaje mueve = new DeteccionControlPersonaje(personaje);
@@ -91,7 +91,15 @@ public class Juego extends JFrame implements Runnable {
             listaObjetosFisicos.get(i).actualizar(dt);
         }
         
-        colocarCamara(universo, new Point3d(0f,5f,0f) , new Point3d(personaje.posiciones[0],personaje.posiciones[1],personaje.posiciones[2]));
+        Vector3d direccion = personaje.conseguirDireccionFrontal();
+        
+        System.out.println(direccion);
+        
+        colocarCamara(universo,
+                new Point3d( personaje.posiciones[0] - direccion.getX(), personaje.posiciones[1] - direccion.getY() + personaje.altura, personaje.posiciones[2] - direccion.getZ()),
+                new Point3d( personaje.posiciones[0] + direccion.getX(), personaje.posiciones[1] + direccion.getY() + personaje.altura, personaje.posiciones[2] + direccion.getZ())
+        );
+        
     }
 
     void mostrar() throws Exception {

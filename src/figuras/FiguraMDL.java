@@ -62,7 +62,7 @@ TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala){
                  nombreAnimacionCaminando= "iron_golem:cwalk";
                  nombreAnimacionQuieto= "iron_golem:cpause1";
                  nombreAnimacionLuchando= "iron_golem:run";//"iron_golem:ca1slashl";
-                rotacionX=-1.5f;        rotacionZ=3.14f;    escalaTamano=0.65f;
+                rotacionX = -1.5f; rotacionZ = 3.9f; escalaTamano=0.65f;
                 desplazamientoY=-1f;
                 alturaP= (float) 3f*escalaTamano;
                 alturaDeOjos= alturaP;
