@@ -34,24 +34,32 @@ public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
            for (int n=0;n<events.length;n++){
               if( events[n] instanceof MouseEvent){
                   MouseEvent eM = (MouseEvent) events[n];
-                  System.out.println("Raton presionada: " + eM.getButton());
+                  //System.out.println("Raton presionada: " + eM.getButton());
+                  if( eM.getID() == MouseEvent.MOUSE_CLICKED){
+                      if( eM.getButton() == 1){
+                          //personaje.guerra = true;
+                      }
+                  }
               }
                if (events[n]  instanceof KeyEvent){
                 KeyEvent ek = (KeyEvent) events[n] ;
                 System.out.println("Tecla presionada: " + ek.getKeyChar());
+                
+                char caracter = Character.toLowerCase(ek.getKeyChar());
+                
                 if (ek.getID() == KeyEvent.KEY_PRESSED) {
                     if (ek.getKeyCode() == 16 ) {
                         personaje.corriendo = true;
                     }
                     
-                    if (ek.getKeyChar() == 'w') {
+                    if (caracter == 'w') {
                         personaje.adelante= true;
                         personaje.caminando = true;
                         personaje.quieto = false;
                     }
-                    else if (ek.getKeyChar() == 'a') personaje.izquierda=true;
-                    else if (ek.getKeyChar() == 'd') personaje.derecha=true;
-                    else if (ek.getKeyChar() == 's') personaje.atras=true;
+                    else if (caracter == 'a') personaje.izquierda=true;
+                    else if (caracter == 'd') personaje.derecha=true;
+                    else if (caracter == 's') personaje.atras=true;
                 }
                 else if (ek.getID() == KeyEvent.KEY_RELEASED)   {
                     
@@ -59,14 +67,14 @@ public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
                         personaje.corriendo = false;
                     }
                     
-                    if (ek.getKeyChar()== 'w'){
+                    if (caracter== 'w'){
                         personaje.adelante=false;
                         personaje.caminando= false;
                         personaje.quieto = true;
                     }
-                    else if (ek.getKeyChar() == 'a') personaje.izquierda=false;
-                    else if (ek.getKeyChar() == 'd') personaje.derecha=false;
-                    else if (ek.getKeyChar() == 's')personaje.atras=false;
+                    else if (caracter == 'a') personaje.izquierda=false;
+                    else if (caracter == 'd') personaje.derecha=false;
+                    else if (caracter == 's')personaje.atras=false;
                 }
           }
         }

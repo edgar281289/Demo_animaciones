@@ -22,7 +22,8 @@ public class Juego extends JFrame implements Runnable {
     BranchGroup conjunto = new BranchGroup();
     // Pesonajes importantes del juego
     public Figura personaje;  //golem;
-    Figura perseguidor;
+    Figura perseguidor1;
+    Figura perseguidor2;
     public PickTool explorador;
 
     public Juego() {
@@ -73,6 +74,20 @@ public class Juego extends JFrame implements Runnable {
         //personaje = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Dire_Cat.mdl", radio, conjunto, listaObjetosFisicos, this, true);
         personaje.crearPropiedades(posX, posY, posZ);
 
+        radio = 1f; posX = 4.0f; posY = 0f; posZ = 4.0f;
+        perseguidor1 = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, false);
+        perseguidor1.crearPropiedades(posX, posY, posZ);
+        
+        radio = 1f; posX = 8.0f; posY = 0f; posZ = 6.0f;
+        perseguidor2 = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, false);
+        perseguidor2.crearPropiedades(posX, posY, posZ);
+        
+        /*
+        Colisiones colisiones = new Colisiones(personaje, personaje);
+        colisiones.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
+        conjunto.addChild(colisiones);
+        */      
+        
         DeteccionControlPersonaje mueve = new DeteccionControlPersonaje(personaje);
         mueve.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
         conjunto.addChild(mueve);

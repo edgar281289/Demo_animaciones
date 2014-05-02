@@ -23,7 +23,9 @@ public class FiguraMDL extends Figura {
     boolean esPersonaje;
     boolean animacion_caminando_lanzada = false;
     boolean animacion_corriendo_lanzada = false;
-
+    boolean guerra = false;
+    boolean moviendoLaEspada = false;
+    
    public FiguraMDL(float radio_, float altura_,String ficheroMDL, float radio,  BranchGroup conjunto,  ArrayList<Figura> listaObjetos, Juego juego, boolean esPersonaje){
       super(radio_, altura_, conjunto,  listaObjetos, juego);
       esMDL=true;
@@ -36,7 +38,7 @@ public class FiguraMDL extends Figura {
      apariencia.setTextureAttributes(texAttr);
 
      TransformGroup figuraVisual =  crearObjetoMDL(ficheroMDL, radio*2);
-
+     
      ramaVisible. addChild(desplazamientoFigura);
      desplazamientoFigura.addChild(figuraVisual);
 
@@ -58,6 +60,7 @@ TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala){
              CapabilitiesMDL.setCapabilities(RamaMDL, this.identificadorFigura);
              //Para cada Objeto MDL dar nombre las animaciones de la figura. Dar rotaciones a la figuraMDL (suelen venir giradas)
              ab = (AnimationBehavior) escenaPersonaje1.getNamedObjects().get("AnimationBehavior");
+             
               if (archivo.equals("objetosMDL/Iron_Golem.mdl")){
                  nombreAnimacionCorriendo= "iron_golem:crun";
                  nombreAnimacionCaminando= "iron_golem:cwalk";
@@ -113,9 +116,6 @@ TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala){
         return rotadorDeFIguraMDL;
   }
 
-boolean moviendoLaEspada =false;
-boolean guerra =false;
-
 public void actualizar(float dt){
     super.actualizar(dt);
 
@@ -127,17 +127,28 @@ public void actualizar(float dt){
     System.out.println("\n\n" );
     */
     
-    if(juego.personaje.corriendo && animacion_corriendo_lanzada == false ){
-        ab.playAnimation(nombreAnimacionCorriendo,true);
-        animacion_corriendo_lanzada = true;
-    }else if(juego.personaje.caminando && (animacion_caminando_lanzada == false)){
-        ab.playAnimation(nombreAnimacionCaminando,true);
-        animacion_caminando_lanzada = true;        
-        animacion_corriendo_lanzada = false;
-    }else if((juego.personaje.quieto && animacion_caminando_lanzada == true) || juego.personaje.quieto && animacion_corriendo_lanzada == true ){
-        ab.playAnimation(nombreAnimacionQuieto,true);
-        animacion_corriendo_lanzada = false;
-        animacion_caminando_lanzada = false;
+    if (this.esPersonaje) {
+
+        if (guerra) {
+            if (!moviendoLaEspada) {   // la animacion solo se activa una vez.  Luego se desactiva.  No tiene sentido activar varias veces
+                //La animacion ca1slashr es para atacar con la espada una vez. Si la bander es true, es continua
+                ab.playAnimation("iron_golem:ca1slashr", true);
+                moviendoLaEspada = true;
+            }
+        } else {
+            if (juego.personaje.corriendo && animacion_corriendo_lanzada == false) {
+                ab.playAnimation(nombreAnimacionCorriendo, true);
+                animacion_corriendo_lanzada = true;
+            } else if (juego.personaje.caminando && (animacion_caminando_lanzada == false)) {
+                ab.playAnimation(nombreAnimacionCaminando, true);
+                animacion_caminando_lanzada = true;
+                animacion_corriendo_lanzada = false;
+            } else if ((juego.personaje.quieto && animacion_caminando_lanzada == true) || juego.personaje.quieto && animacion_corriendo_lanzada == true) {
+                ab.playAnimation(nombreAnimacionQuieto, true);
+                animacion_corriendo_lanzada = false;
+                animacion_caminando_lanzada = false;
+            }
+        }
     }
     
     

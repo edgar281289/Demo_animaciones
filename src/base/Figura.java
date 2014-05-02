@@ -6,7 +6,8 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 import java.util.ArrayList;
 
-public class Figura {
+//public class Figura extends Shape3D{
+public class Figura{
 
     float dt, radio, altura;
 
@@ -27,7 +28,12 @@ public class Figura {
     public Vector3f localizacionObjetivo;
     public int estadoFigura;                    //Dependiendo del estado de la figura, su entorno, y del juego, la figura tiene un comportamiento dado.
     public Figura objetivo;                      //El objetivo puede ser: localizar otra figura,
+    
     //Si adem‡s, hubiera que realizar uan accion particular (ej. Dispararle, darle alimento) se necesitaria otro atributo (ej. TareaObjetivo)
+    boolean colisionDelante;
+    boolean colisionAtras;
+    boolean colisionIzquierda;
+    boolean colisionDerecha;
 
     public Figura(float radio_, float altura_, BranchGroup conjunto, ArrayList<Figura> listaObjetosFisicos, Juego juego) {
         this.listaObjetosFisicos = listaObjetosFisicos;
@@ -109,13 +115,17 @@ public class Figura {
                 if (juego.personaje.atras) {
                     deltaVel = -0.05f;
                 }
-
+                
+                if(juego.personaje.corriendo){
+                    deltaVel *= 2;
+                }
+                    
                 //Se calcula el control con respecto al suelo  (del objeto controlado).
                 float distAlsuelo = radio;
                 float subirBajarPersonaje = controlarAlturaSuelo(t3dPersonaje, juego.explorador, distAlsuelo);
                 
-                System.out.println("Distancia al suelo: " + distAlsuelo);
-                System.out.println("SubirBajarPersonaje: " + 0);
+                //System.out.println("Distancia al suelo: " + distAlsuelo);
+                //System.out.println("SubirBajarPersonaje: " + 0);
                 
                 //Se crean un Transform3D con los micro-desplazamientos/rotaciones. 
                 Transform3D t3dNueva = new Transform3D();
