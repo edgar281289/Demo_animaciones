@@ -43,13 +43,13 @@ public class FiguraMDL extends Figura {
         ramaVisible.addChild(desplazamientoFigura);
         desplazamientoFigura.addChild(figuraVisual);
 
-        /*
+        
         if (esPersonaje) {
             DeteccionControlPersonaje mueve = new DeteccionControlPersonaje(this);
             mueve.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
             ramaVisible.addChild(mueve);
         }
-        */
+        
     }
 
     TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala) {
@@ -65,6 +65,7 @@ public class FiguraMDL extends Figura {
             escenaPersonaje1 = nwn2.load(new URL("file://localhost/" + System.getProperty("user.dir") + "/" + archivo));
             RamaMDL = escenaPersonaje1.getSceneGroup();
             //Recorrido por los- objetos para darle capacidades a sus Shapes3D
+            //System.out.println("ID: " + this.identificadorFigura);
             CapabilitiesMDL.setCapabilities(RamaMDL, this.identificadorFigura);
             CapabilitiesMDL.etiquetarTodo(RamaMDL, estadoFigura, juego, "figura_" + identificadorFigura);
             //Para cada Objeto MDL dar nombre las animaciones de la figura. Dar rotaciones a la figuraMDL (suelen venir giradas)
@@ -120,7 +121,7 @@ public class FiguraMDL extends Figura {
             }
         } catch (Exception exc) {
             exc.printStackTrace();
-            System.out.println("Error during load Dire_Cat.mdl");
+           // System.out.println("Error during load Dire_Cat.mdl");
         }
 
         //Ajustando rotacion inicial de la figura MLD y aplicando tamano
@@ -166,36 +167,5 @@ public class FiguraMDL extends Figura {
                 }
             }
         }
-
-    //else ab.playAnimation(nombreAnimacionQuieto,true);
-        //if(juego.personaje.caminando) ab.playAnimation(nombreAnimacionCaminando, true);
-        //else ab.playAnimation(nombreAnimacionQuieto, true);
-        /*
-         if (guerra){
-         if (!moviendoLaEspada){   // la animacion solo se activa una vez.  Luego se desactiva.  No tiene sentido activar varias veces
-         //La animacion ca1slashr es para atacar con la espada una vez. Si la bander es true, es continua
-         ab.playAnimation("iron_golem:ca1slashr", true);
-         moviendoLaEspada= true;            
-         }
-         }*/
-     //Se consulta el Transform3D actual y una copia porque se necesitarán para varias operaciones de actualización
-        /*
-         if (objMasCercano != null){
-         Node nd = objMasCercano.getObject();
-         System.out.println("A la vista está  "+nd.getUserData());
-         } else System.out.println("....nadie al frente");
-         */
     }
 }
-
-/*
- if(juego.personaje.derecha){
- ab.playAnimation("iron_golem:ca1slashr", true);
- }
- if(juego.personaje.izquierda){
- ab.playAnimation("iron_golem:cpause1", true);
- }
- if(juego.personaje.adelante){
- desplazamientoFigura.removeAllChildren();
- }
- */

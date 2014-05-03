@@ -61,6 +61,7 @@ public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
                     else if (caracter == 's') personaje.atras=true;
                     else if (caracter == 'p') personaje.primeraPersona=true;
                     else if (caracter == 't') personaje.primeraPersona=false;
+                    else if (caracter == 'u') personaje.cambioDeEscenario=true;
                 }
                 else if (ek.getID() == KeyEvent.KEY_RELEASED)   {
                     

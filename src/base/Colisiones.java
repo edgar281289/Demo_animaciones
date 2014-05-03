@@ -61,7 +61,7 @@ public class Colisiones extends Behavior {
             if (theCriterion instanceof WakeupOnCollisionEntry) {
                 Node theLeaf = ((WakeupOnCollisionEntry) theCriterion).getTriggeringPath().getObject();
                 //System.out.println("El " + BranchGroupReferencia.getClass().getName() + " golpeo con " + theLeaf.getUserData());
-                contadorColisiones++;
+                //contadorColisiones++;
             } else if (theCriterion instanceof WakeupOnCollisionExit) { /*.. codigo si la sale de la colision ...*/
                 figura.colisionDelante = false;
                 figura.colisionAtras = false;

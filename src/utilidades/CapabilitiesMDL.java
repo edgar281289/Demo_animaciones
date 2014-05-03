@@ -29,7 +29,9 @@ public class CapabilitiesMDL {
                 Shape3D s = (Shape3D) node;
                 s.setUserData("figura_MDL_" + CapabilitiesMDL.identificador);
                 PickTool.setCapabilities(s, PickTool.INTERSECT_FULL);
-                s.setPickable(true);
+                
+                if(CapabilitiesMDL.identificador == 0)s.setPickable(false);
+                else s.setPickable(true);
 
                 s.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
                 Appearance app = s.getAppearance();

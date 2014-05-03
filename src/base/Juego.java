@@ -1,5 +1,7 @@
 package base;
 
+import com.sun.j3d.loaders.Scene;
+import com.sun.j3d.loaders.objectfile.ObjectFile;
 import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import com.sun.j3d.utils.picking.PickTool;
 import java.awt.*;
@@ -27,7 +29,7 @@ public class Juego extends JFrame implements Runnable {
     public PickTool explorador;
     
     public Juego() {
-        this.primeraPersona = true;
+        //this.primeraPersona = true;
         Container GranPanel = getContentPane();
         Canvas3D zonaDibujo = new Canvas3D(SimpleUniverse.getPreferredConfiguration());
         zonaDibujo.setPreferredSize(new Dimension(800, 600));
@@ -76,9 +78,42 @@ public class Juego extends JFrame implements Runnable {
         personaje = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
         personaje.crearPropiedades(posX, posY, posZ);
         
-        radio = 1f; posX = 4.0f; posY = 0.3f; posZ = 4.0f;
+        radio = 1f; posX = 0.0f; posY = 0.8f; posZ = 15.0f;
         perseguidor1 = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, false);
         perseguidor1.crearPropiedades(posX, posY, posZ);
+
+        //Creando un elefenta con luz direccional
+        ObjectFile file = new ObjectFile (ObjectFile.RESIZE); Scene scene = null;
+        try {scene = file.load(rutaCarpetaProyecto+"elephav.obj");}
+        catch (Exception e) { System.err.println(e); System.exit(1); }
+        BranchGroup elefante =  scene.getSceneGroup();
+       //Imprime la clase del primer hijo
+        
+        Transform3D scala = new Transform3D();
+        scala.setScale(7);
+        
+        Transform3D posicionInicial = new Transform3D();
+        posicionInicial.set(new Vector3f(15.0f,3.5f,20.0f));
+        
+        TransformGroup TGelefanteScala = new TransformGroup(scala);
+        TransformGroup TGelefantePos = new TransformGroup(posicionInicial);
+        TransformGroup TGelefante = new TransformGroup();
+        
+        TGelefanteScala.addChild(elefante);
+        TGelefante.addChild(TGelefantePos);
+        TGelefantePos.addChild(TGelefanteScala);
+        
+        //TGelefante.setTransform(scala);
+        //TGelefante.setTransform(posicionInicial);
+        
+        //TGelefante.addChild(TGelefantePos);
+        //TGelefante.addChild(elefante);
+        
+        conjunto.addChild(TGelefante);
+        //Permitiendo que el Shape3D del elefante se explore y se localice.  Se le da un nombre.
+        PickTool.setCapabilities(elefante.getChild(0), PickTool.INTERSECT_FULL);
+        elefante.setPickable(true);
+        elefante.getChild(0).setUserData("Un elefante");
         
         //perseguidor1.velocidades[0]=2.0f;
         //perseguidor1.velocidades[1]=0.0f;
@@ -97,10 +132,12 @@ public class Juego extends JFrame implements Runnable {
         conjunto.addChild(colisiones);
         */
         
+        /*
         DeteccionControlPersonaje mueve = new DeteccionControlPersonaje(personaje);
         mueve.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
         conjunto.addChild(mueve);
-
+        */
+        
         //perseguidor = new Esfera (radio, "texturas//bosques2.jpg", conjunto, listaObjetosFisicos, this);
         //perseguidor.crearPropiedades( 3, 0, 0);
         //perseguidor.asignarObjetivo(personaje,15f);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
@@ -128,6 +165,9 @@ public class Juego extends JFrame implements Runnable {
                     new Point3d( personaje.posiciones[0] + direccion.getX(), personaje.posiciones[1] + direccion.getY() + personaje.altura, personaje.posiciones[2] + direccion.getZ())
             );            
         }
+        
+        //System.out.println("Posicion npc: " + perseguidor1.posiciones[0] + ", " + perseguidor1.posiciones[1] + ", " + perseguidor1.posiciones[2]);
+        
     }
 
     void mostrar() throws Exception {
