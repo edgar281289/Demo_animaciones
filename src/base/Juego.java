@@ -2,15 +2,17 @@ package base;
 
 import com.sun.j3d.loaders.Scene;
 import com.sun.j3d.loaders.objectfile.ObjectFile;
-import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import com.sun.j3d.utils.picking.PickTool;
+import com.sun.j3d.utils.image.TextureLoader;
 import java.awt.*;
 import javax.swing.*;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import java.util.ArrayList;
 import com.sun.j3d.utils.universe.SimpleUniverse;
+import com.sun.j3d.utils.geometry.Box;
 import figuras.FiguraMDL;
+import java.util.Enumeration;
 
 public class Juego extends JFrame implements Runnable {
 
@@ -72,9 +74,7 @@ public class Juego extends JFrame implements Runnable {
         objRoot.addChild(mostrar);
 
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
-        float radio = 1f;
-        float posX = 0f;
-        float posY = 0.3f, posZ = 0f;
+        float radio = 1f, posX = 0f, posY = 0.3f, posZ = 0f;
         personaje = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
         personaje.crearPropiedades(posX, posY, posZ);
         
@@ -82,12 +82,68 @@ public class Juego extends JFrame implements Runnable {
         perseguidor1 = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, false);
         perseguidor1.crearPropiedades(posX, posY, posZ);
 
+        conjunto.addChild(crearElefante());
+        conjunto.addChild(crearCaja(-15f,1.5f,20.0f,0));
+        conjunto.addChild(crearCaja(-21f,1.5f,25.0f,1));
+        
+        //perseguidor1.velocidades[0]=2.0f;
+        //perseguidor1.velocidades[1]=0.0f;
+        //perseguidor1.velocidades[0]=1.0f;
+        
+        FiguraMDL personajeMDL = (FiguraMDL) personaje;
+        Colisiones colisiones = new Colisiones(personajeMDL.RamaMDL, personaje);
+        colisiones.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1000.0));
+        conjunto.addChild(colisiones);
+        
+        //perseguidor = new Esfera (radio, "texturas//bosques2.jpg", conjunto, listaObjetosFisicos, this);
+        //perseguidor.crearPropiedades( 3, 0, 0);
+        //perseguidor.asignarObjetivo(personaje,15f);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
+        //Creacion de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
+        utilidades.TerrenoSimple terreno = new utilidades.TerrenoSimple(1000, 1000, -25, -0.1f, -12, "unaTextura_Desabilitada", conjunto);
+        
+        return objRoot;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public TransformGroup crearCaja(float pX, float pY, float pZ, int identificador){
+
+        Appearance apariencia = new Appearance();
+        Texture tex = new TextureLoader(rutaCarpetaProyecto + "Texturas/madera.jpg", this).getTexture(); 
+        apariencia.setTexture(tex); 
+        TextureAttributes texAttr = new TextureAttributes(); 
+        texAttr.setTextureMode(TextureAttributes.MODULATE); 
+        apariencia.setTextureAttributes(texAttr);
+        
+        Box caja = new Box(2f, 2f, 2f, Box.GENERATE_TEXTURE_COORDS, apariencia);
+        
+        Enumeration childrens = caja.getAllChildren();
+        while(childrens.hasMoreElements()){
+            Object o = childrens.nextElement();
+            if( o instanceof Shape3D ){
+                Shape3D shape = (Shape3D)o;
+                shape.setUserData("figura_caja_" + identificador);
+                PickTool.setCapabilities(shape, PickTool.INTERSECT_FULL);
+                shape.setPickable(true);
+            }
+        }
+        
+        Transform3D trasladarCaja = new Transform3D();
+        trasladarCaja.set(new Vector3d(pX,pY,pZ));
+        TransformGroup TGcaja = new TransformGroup(trasladarCaja);
+        TGcaja.addChild(caja);
+        
+        return TGcaja;
+    }
+    
+    TransformGroup crearElefante(){
         //Creando un elefenta con luz direccional
         ObjectFile file = new ObjectFile (ObjectFile.RESIZE); Scene scene = null;
         try {scene = file.load(rutaCarpetaProyecto+"elephav.obj");}
         catch (Exception e) { System.err.println(e); System.exit(1); }
         BranchGroup elefante =  scene.getSceneGroup();
-       //Imprime la clase del primer hijo
         
         Transform3D scala = new Transform3D();
         scala.setScale(7);
@@ -103,50 +159,13 @@ public class Juego extends JFrame implements Runnable {
         TGelefante.addChild(TGelefantePos);
         TGelefantePos.addChild(TGelefanteScala);
         
-        //TGelefante.setTransform(scala);
-        //TGelefante.setTransform(posicionInicial);
-        
-        //TGelefante.addChild(TGelefantePos);
-        //TGelefante.addChild(elefante);
-        
-        conjunto.addChild(TGelefante);
-        //Permitiendo que el Shape3D del elefante se explore y se localice.  Se le da un nombre.
         PickTool.setCapabilities(elefante.getChild(0), PickTool.INTERSECT_FULL);
         elefante.setPickable(true);
-        elefante.getChild(0).setUserData("Un elefante");
+        elefante.getChild(0).setUserData("figura_elefante");
         
-        //perseguidor1.velocidades[0]=2.0f;
-        //perseguidor1.velocidades[1]=0.0f;
-        //perseguidor1.velocidades[0]=1.0f;
-        
-        /*
-        radio = 1f; posX = 8.0f; posY = 0f; posZ = 6.0f;
-        perseguidor2 = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, false);
-        perseguidor2.crearPropiedades(posX, posY, posZ);
-        */
-        
-        /*
-        FiguraMDL personajeMDL = (FiguraMDL) personaje;
-        Colisiones colisiones = new Colisiones(personajeMDL.RamaMDL, personaje);
-        colisiones.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1000.0));
-        conjunto.addChild(colisiones);
-        */
-        
-        /*
-        DeteccionControlPersonaje mueve = new DeteccionControlPersonaje(personaje);
-        mueve.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
-        conjunto.addChild(mueve);
-        */
-        
-        //perseguidor = new Esfera (radio, "texturas//bosques2.jpg", conjunto, listaObjetosFisicos, this);
-        //perseguidor.crearPropiedades( 3, 0, 0);
-        //perseguidor.asignarObjetivo(personaje,15f);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
-        //Creacion de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
-        utilidades.TerrenoSimple terreno = new utilidades.TerrenoSimple(100, 100, -25, -0.1f, -12, "unaTextura_Desabilitada", conjunto);
-        
-        return objRoot;
+        return TGelefante;
     }
-
+    
     void actualizar(float dt) {
         //ACTUALIZAR DATOS DE FUERZAS DE LAS FIGURAS AUTONOMAS  (ej. para que cada figura pueda persiguir su objetivo)
         for (int i = 0; i < this.listaObjetosFisicos.size(); i++) {

@@ -131,7 +131,7 @@ public class Figura{
                 }
                 
                 if(juego.personaje.corriendo){
-                    deltaVel *= 2;
+                    deltaVel *= 3;
                 }
                 
                 //Se calcula el control con respecto al suelo  (del objeto controlado).
@@ -160,8 +160,8 @@ public class Figura{
                 copiat3dPersonaje.get(posSonar);
 
                 //Point3d posActual = new Point3d(juego.personaje.posiciones[0], juego.personaje.posiciones[1], juego.personaje.posiciones[2]);
-                //Vector3d direccion = new Vector3d(posSonar.x - posPersonaje.x, posSonar.y - posPersonaje.y, posSonar.z - posPersonaje.z);
-                Vector3d direccion = this.conseguirDireccionFrontal();
+                Vector3d direccion = new Vector3d(posSonar.x - posPersonaje.x, posSonar.y - posPersonaje.y, posSonar.z - posPersonaje.z);
+                //Vector3d direccion = this.conseguirDireccionFrontal();
                 juego.explorador.setShapeRay(new Point3d(posPersonaje.x, posPersonaje.y, posPersonaje.z), direccion);
                 //juego.explorador.setShapeRay(posActual, direccion);
                 
@@ -169,10 +169,10 @@ public class Figura{
                 if(objMasCercano != null){
                     for(PickResult current : objMasCercano){
                     Node nd = current.getObject();
-                    System.out.println("A la vista esta... " + nd.getUserData() + " a la distancia... ");
+                    //System.out.println("A la vista esta... " + nd.getUserData() + " a la distancia... ");
                 }
                 }else{
-                    System.out.println("....nada a la vista");
+                    //System.out.println("....nada a la vista");
                 }
                 
             }
