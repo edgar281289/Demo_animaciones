@@ -8,6 +8,7 @@ package base;
 import java.util.Enumeration;
 import javax.media.j3d.Behavior;
 import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.WakeupCriterion;
@@ -26,9 +27,9 @@ public class Colisiones extends Behavior {
     int contadorColisiones;
     Figura figura;
     protected Shape3D ObjReferencia;
+    protected BranchGroup BranchGroupReferencia;
     protected WakeupCriterion[] Criterios;
     protected WakeupOr CriterioUnificador; /* El resultad de 'OR' de los criterios por separado */
-
 
     public Colisiones(Shape3D _ObjetoReferencia, Figura p) {
         figura = p;
@@ -36,11 +37,17 @@ public class Colisiones extends Behavior {
         setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
     }
 
+    public Colisiones(BranchGroup _BranchGroupReferencia, Figura p) {
+        figura = p;
+        BranchGroupReferencia = _BranchGroupReferencia;
+        setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
+    }
+
     public void initialize() {
         Criterios = new WakeupCriterion[3];
-        WakeupOnCollisionEntry inicia = new WakeupOnCollisionEntry(ObjReferencia, WakeupOnCollisionEntry.USE_GEOMETRY);
-        WakeupOnCollisionExit finaliza = new WakeupOnCollisionExit(ObjReferencia, WakeupOnCollisionEntry.USE_GEOMETRY);
-        WakeupOnCollisionMovement mueve = new WakeupOnCollisionMovement(ObjReferencia, WakeupOnCollisionEntry.USE_GEOMETRY);
+        WakeupOnCollisionEntry inicia = new WakeupOnCollisionEntry(BranchGroupReferencia, WakeupOnCollisionEntry.USE_GEOMETRY);
+        WakeupOnCollisionExit finaliza = new WakeupOnCollisionExit(BranchGroupReferencia, WakeupOnCollisionEntry.USE_GEOMETRY);
+        WakeupOnCollisionMovement mueve = new WakeupOnCollisionMovement(BranchGroupReferencia, WakeupOnCollisionEntry.USE_GEOMETRY);
         Criterios[0] = inicia; // la colision se produce, se inicia
         Criterios[1] = finaliza; // la colision finaliza. Los objetos dejan de colisionar
         Criterios[2] = mueve; //el objeto colisionado se mueve dentro de la colision
@@ -53,11 +60,9 @@ public class Colisiones extends Behavior {
             WakeupCriterion theCriterion = (WakeupCriterion) criteria.nextElement();
             if (theCriterion instanceof WakeupOnCollisionEntry) {
                 Node theLeaf = ((WakeupOnCollisionEntry) theCriterion).getTriggeringPath().getObject();
-                System.out.println("El " + ObjReferencia.getClass().getName() + " golpeo con " + theLeaf.getUserData());
+                //System.out.println("El " + BranchGroupReferencia.getClass().getName() + " golpeo con " + theLeaf.getUserData());
                 contadorColisiones++;
             } else if (theCriterion instanceof WakeupOnCollisionExit) { /*.. codigo si la sale de la colision ...*/
-
-                System.out.println("No hay Nadie Cabesa");
                 figura.colisionDelante = false;
                 figura.colisionAtras = false;
                 figura.colisionIzquierda = false;
@@ -70,7 +75,7 @@ public class Colisiones extends Behavior {
                 } else if (figura.atras && !figura.colisionDelante) {
                     figura.colisionAtras = true;
                 }
-                System.out.println(" El objeto colisionado se movio miestras colisionaba " + figura.colisionAtras);
+                //System.out.println(" El objeto colisionado se movio miestras colisionaba " + figura.colisionAtras);
             }
         }
         wakeupOn(CriterioUnificador);

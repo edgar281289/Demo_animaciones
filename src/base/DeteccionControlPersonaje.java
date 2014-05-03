@@ -43,10 +43,9 @@ public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
               }
                if (events[n]  instanceof KeyEvent){
                 KeyEvent ek = (KeyEvent) events[n] ;
-                System.out.println("Tecla presionada: " + ek.getKeyChar());
+                //System.out.println("Tecla presionada: " + ek.getKeyChar());
                 
                 char caracter = Character.toLowerCase(ek.getKeyChar());
-                
                 if (ek.getID() == KeyEvent.KEY_PRESSED) {
                     if (ek.getKeyCode() == 16 ) {
                         personaje.corriendo = true;
@@ -60,6 +59,8 @@ public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
                     else if (caracter == 'a') personaje.izquierda=true;
                     else if (caracter == 'd') personaje.derecha=true;
                     else if (caracter == 's') personaje.atras=true;
+                    else if (caracter == 'p') personaje.primeraPersona=true;
+                    else if (caracter == 't') personaje.primeraPersona=false;
                 }
                 else if (ek.getID() == KeyEvent.KEY_RELEASED)   {
                     

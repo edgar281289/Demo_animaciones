@@ -112,6 +112,12 @@ public class TerrenoSimple extends BranchGroup {
         ng.generateNormals(gi);
         terreno.setGeometry(gi.getGeometryArray());
         
+        /*
+        PickTool.setCapabilities(terreno, PickTool.INTERSECT_FULL);
+        terreno.setUserData("terreno");
+        terreno.setPickable(true);
+        */
+        
         //Lectura de textura
         //        Appearance aper = new Appearance();
         //	try      TextureLoader Texget=new TextureLoader(new java.net.URL(texture), null);
@@ -127,16 +133,7 @@ public class TerrenoSimple extends BranchGroup {
           subvertices.add(vertices.get(i));
           if (subvertices.size()>=4){
                  BranchGroup x = new BranchGroup();
-                 
-                 /**
-                  * Añadido código para que se encuentre el terrano (Pickable)
-                  */
-                 terreno = crearPlaca(subvertices);
-                 PickTool.setCapabilities(terreno, PickTool.INTERSECT_FULL);
-                 terreno.setUserData("terreno");
-                 terreno.setPickable(true);
-                 
-                 x.addChild( terreno );
+                 x.addChild( crearPlaca(subvertices));
                  TGterreno.addChild(x);
                  subvertices= new ArrayList<Vector3f> ();
           }
@@ -156,7 +153,12 @@ public class TerrenoSimple extends BranchGroup {
        placa.setColor(1, new Color3f(0.18f+subvertices.get(1).y/6.2f, subvertices.get(1).y/2f+0.35f, 0.12f));
        placa.setColor(2, new Color3f(0.15f+subvertices.get(2).y/6.3f, subvertices.get(2).y/2f+0.35f, 0.13f));
        placa.setColor(3, new Color3f(0.12f+subvertices.get(3).y/6.4f,subvertices.get(3).y/2f+0.35f, 0.15f));
-       return ( new Shape3D(placa));
+       Shape3D shape = new Shape3D(placa);
+
+       PickTool.setCapabilities(shape, PickTool.INTERSECT_FULL);
+       shape.setUserData("terreno");
+       shape.setPickable(true);
+       return ( shape );
 }
 
  }

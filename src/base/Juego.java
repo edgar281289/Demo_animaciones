@@ -8,34 +8,37 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 import java.util.ArrayList;
 import com.sun.j3d.utils.universe.SimpleUniverse;
-import figuras.Esfera;
 import figuras.FiguraMDL;
 
 public class Juego extends JFrame implements Runnable {
 
+    public boolean primeraPersona = false;
     int estadoJuego = 0;
     SimpleUniverse universo;
-    BoundingSphere limites = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
+    public BoundingSphere limites = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
     public String rutaCarpetaProyecto = System.getProperty("user.dir") + "/";
     Thread hebra = new Thread(this);
     ArrayList<base.Figura> listaObjetosFisicos = new ArrayList<Figura>();
-    BranchGroup conjunto = new BranchGroup();
+    public BranchGroup conjunto = new BranchGroup();
     // Pesonajes importantes del juego
     public Figura personaje;  //golem;
     Figura perseguidor1;
     Figura perseguidor2;
     public PickTool explorador;
-
+    
     public Juego() {
+        this.primeraPersona = true;
         Container GranPanel = getContentPane();
         Canvas3D zonaDibujo = new Canvas3D(SimpleUniverse.getPreferredConfiguration());
         zonaDibujo.setPreferredSize(new Dimension(800, 600));
         GranPanel.add(zonaDibujo, BorderLayout.CENTER);
         universo = new SimpleUniverse(zonaDibujo);
-
-        OrbitBehavior B = new OrbitBehavior(zonaDibujo);
-        B.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
-        universo.getViewingPlatform().setViewPlatformBehavior(B);
+        
+        zonaDibujo.getView().setMinimumFrameCycleTime(30L);
+        
+        //OrbitBehavior B = new OrbitBehavior(zonaDibujo);
+        //B.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
+        //universo.getViewingPlatform().setViewPlatformBehavior(B);
 
         BranchGroup escena = crearEscena();
         escena.compile();
@@ -69,24 +72,30 @@ public class Juego extends JFrame implements Runnable {
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float radio = 1f;
         float posX = 0f;
-        float posY = 0f, posZ = 0f;
+        float posY = 0.3f, posZ = 0f;
         personaje = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
-        //personaje = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Dire_Cat.mdl", radio, conjunto, listaObjetosFisicos, this, true);
         personaje.crearPropiedades(posX, posY, posZ);
-
-        radio = 1f; posX = 4.0f; posY = 0f; posZ = 4.0f;
+        
+        radio = 1f; posX = 4.0f; posY = 0.3f; posZ = 4.0f;
         perseguidor1 = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, false);
         perseguidor1.crearPropiedades(posX, posY, posZ);
         
+        //perseguidor1.velocidades[0]=2.0f;
+        //perseguidor1.velocidades[1]=0.0f;
+        //perseguidor1.velocidades[0]=1.0f;
+        
+        /*
         radio = 1f; posX = 8.0f; posY = 0f; posZ = 6.0f;
         perseguidor2 = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, false);
         perseguidor2.crearPropiedades(posX, posY, posZ);
+        */
         
         /*
-        Colisiones colisiones = new Colisiones(personaje, personaje);
-        colisiones.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
+        FiguraMDL personajeMDL = (FiguraMDL) personaje;
+        Colisiones colisiones = new Colisiones(personajeMDL.RamaMDL, personaje);
+        colisiones.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1000.0));
         conjunto.addChild(colisiones);
-        */      
+        */
         
         DeteccionControlPersonaje mueve = new DeteccionControlPersonaje(personaje);
         mueve.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
@@ -108,12 +117,17 @@ public class Juego extends JFrame implements Runnable {
         }
         
         Vector3d direccion = personaje.conseguirDireccionFrontal();
-        
-        colocarCamara(universo,
-                new Point3d( personaje.posiciones[0] - direccion.getX(), personaje.posiciones[1] - direccion.getY() + personaje.altura, personaje.posiciones[2] - direccion.getZ()),
-                new Point3d( personaje.posiciones[0] + direccion.getX(), personaje.posiciones[1] + direccion.getY() + personaje.altura, personaje.posiciones[2] + direccion.getZ())
-        );
-        
+        if(!primeraPersona){
+            colocarCamara(universo,
+                    new Point3d( personaje.posiciones[0] - direccion.getX(), personaje.posiciones[1] - direccion.getY() + personaje.altura, personaje.posiciones[2] - direccion.getZ()),
+                    new Point3d( personaje.posiciones[0] + direccion.getX(), personaje.posiciones[1] + direccion.getY() + personaje.altura, personaje.posiciones[2] + direccion.getZ())
+            );
+        }else{
+            colocarCamara(universo,
+                    new Point3d( personaje.posiciones[0] + 0.5f, personaje.posiciones[1]  + personaje.altura, personaje.posiciones[2] + 0.5f ),
+                    new Point3d( personaje.posiciones[0] + direccion.getX(), personaje.posiciones[1] + direccion.getY() + personaje.altura, personaje.posiciones[2] + direccion.getZ())
+            );            
+        }
     }
 
     void mostrar() throws Exception {

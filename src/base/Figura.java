@@ -34,6 +34,7 @@ public class Figura{
     boolean colisionAtras;
     boolean colisionIzquierda;
     boolean colisionDerecha;
+    boolean primeraPersona;
 
     public Figura(float radio_, float altura_, BranchGroup conjunto, ArrayList<Figura> listaObjetosFisicos, Juego juego) {
         this.listaObjetosFisicos = listaObjetosFisicos;
@@ -52,6 +53,7 @@ public class Figura{
         conjunto.addChild(ramaVisible);
         this.listaObjetosFisicos.add(this);
         identificadorFigura = listaObjetosFisicos.size() - 1;
+        
         //Presentaci—n inicial de la  figura visual asociada al cuerpo rigido
         Transform3D inip = new Transform3D();
         inip.set(new Vector3f(posX, posY, posZ));
@@ -73,7 +75,7 @@ public class Figura{
      //Actualizar los datos de localizacion no JBullet
         // ...
     }
-
+        
     public void remover() {
 
         try {
@@ -100,7 +102,16 @@ public class Figura{
         } else {
             if (juego.personaje.derecha || juego.personaje.izquierda || juego.personaje.adelante || juego.personaje.atras) {
          //Si se presiona una tecla se da valor a un delta de velocidad hacia adelante y un delta de Angulo
-
+                
+                /**
+                 * Para refrescar el flag de la camara
+                 */
+                if(this.primeraPersona == true){
+                    juego.primeraPersona = true;
+                }else if(this.primeraPersona == false){
+                    juego.primeraPersona = false;
+                }
+                
                 float deltaVel = 0;
                 float deltaAngulo = 0;
                 if (juego.personaje.derecha) {
@@ -110,7 +121,9 @@ public class Figura{
                     deltaAngulo = 0.05f;
                 }
                 if (juego.personaje.adelante) {
-                    deltaVel = 0.05f;
+                   if(!this.colisionDelante){
+                       deltaVel = 0.05f;
+                   }
                 }
                 if (juego.personaje.atras) {
                     deltaVel = -0.05f;
@@ -119,17 +132,16 @@ public class Figura{
                 if(juego.personaje.corriendo){
                     deltaVel *= 2;
                 }
-                    
+                
                 //Se calcula el control con respecto al suelo  (del objeto controlado).
                 float distAlsuelo = radio;
                 float subirBajarPersonaje = controlarAlturaSuelo(t3dPersonaje, juego.explorador, distAlsuelo);
                 
-                //System.out.println("Distancia al suelo: " + distAlsuelo);
-                //System.out.println("SubirBajarPersonaje: " + 0);
+                float distanciaAlSuelo = -(subirBajarPersonaje-juego.personaje.radio)+0.3f;
                 
                 //Se crean un Transform3D con los micro-desplazamientos/rotaciones. 
                 Transform3D t3dNueva = new Transform3D();
-                t3dNueva.set(new Vector3d(0.0d, 0.0f, deltaVel));
+                t3dNueva.set(new Vector3d(0.0d, distanciaAlSuelo, deltaVel));
                 t3dNueva.setRotation(new AxisAngle4f(0, 1f, 0, deltaAngulo));
                 t3dPersonaje.mul(t3dNueva);
 
@@ -152,14 +164,11 @@ public class Figura{
                 juego.explorador.setShapeRay(new Point3d(posPersonaje.x, posPersonaje.y, posPersonaje.z), direccion);
                 //juego.explorador.setShapeRay(posActual, direccion);
                 
-                /**
-                 * Ahora mismo estamos lanzando el rayo hacia delante
-                 */
                 PickResult[] objMasCercano = juego.explorador.pickAllSorted();
                 if(objMasCercano != null){
                     for(PickResult current : objMasCercano){
                     Node nd = current.getObject();
-                    //System.out.println("A la vista esta... " + nd.getUserData());
+                    //System.out.println("A la vista esta... " + nd.getUserData() + " a la distancia... ");
                 }
                 }else{
                     //System.out.println("....nada a la vista");
@@ -202,16 +211,16 @@ public class Figura{
         boolean enc = false;
         if (lista != null) {
             for (PickResult objMasCercano : lista) {
-                //System.out.println(objMasCercano.getObject().getUserData());
+                //System.out.println("Altura/Suelo: a la vista esta... " + objMasCercano.getObject().getUserData());
                 if ((objMasCercano != null) && (!objMasCercano.getObject().getUserData().equals("figura_" + identificadorFigura))) {
                     Node nd = objMasCercano.getObject();
-                    System.out.println("A la vista esta... " + nd.getUserData());
+                    //System.out.println("Altura/Suelo: a la vista esta... " + nd.getUserData());
                     float distanciaSuelo = (float) objMasCercano.getClosestIntersection(posActual).getDistance();
                     subirBajarPersonaje = objAlSuelo + distanciaSuelo;     //System.out.println("... distancia hacia arriba="+distanciaSuelo);
                     enc = true;
                     break;
                 }else{
-                    System.out.println("No encontramos nada... ");
+                    //System.out.println("Altura/Suelo: No encontramos nada... ");
                 }
             }
         }
@@ -221,16 +230,16 @@ public class Figura{
             lista = localizador.pickAllSorted();
             if (lista != null) {
                 for (PickResult objMasCercano : lista) {
-                    if ((objMasCercano != null) && 
-                            (!objMasCercano.getObject().getUserData().equals("figura_" + identificadorFigura))) {
+                    //System.out.println("Altura/Suelo: a la vista esta... " + objMasCercano.getObject().getUserData());
+                    if ((objMasCercano != null) && (!objMasCercano.getObject().getUserData().equals("figura_" + identificadorFigura))) {
                         Node nd = objMasCercano.getObject();
-                        System.out.println("A la vista esta... " + nd.getUserData());
+                        //System.out.println("Altura/Suelo: a la vista esta... " + nd.getUserData());
                         float distanciaSuelo = (float) objMasCercano.getClosestIntersection(posActual).getDistance();
                         subirBajarPersonaje = objAlSuelo - distanciaSuelo;     //System.out.println("... distancia hacia abajo="+distanciaSuelo);
                         enc = true;
                         break;
                     }else {
-                        System.out.println("No encontramos nada... ");
+                        //System.out.println("Altura/Suelo: No encontramos nada... ");
                     }
                 }
             }
