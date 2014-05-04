@@ -35,8 +35,9 @@ public class Figura{
     boolean colisionIzquierda;
     boolean colisionDerecha;
     boolean primeraPersona;
-    boolean cambioDeEscenario;
-
+    public boolean guerra;
+    public boolean atacando;
+    
     public Figura(float radio_, float altura_, BranchGroup conjunto, ArrayList<Figura> listaObjetosFisicos, Juego juego) {
         this.listaObjetosFisicos = listaObjetosFisicos;
         this.conjunto = conjunto;
@@ -101,8 +102,11 @@ public class Figura{
                 t3dPersonaje.get(matrizRotacionPersonaje);
             }
         } else {
+            
             if (juego.personaje.derecha || juego.personaje.izquierda || juego.personaje.adelante || juego.personaje.atras) {
          //Si se presiona una tecla se da valor a un delta de velocidad hacia adelante y un delta de Angulo
+                
+                atacando = false;
                 
                 /**
                  * Para refrescar el flag de la camara
@@ -115,6 +119,7 @@ public class Figura{
                 
                 float deltaVel = 0;
                 float deltaAngulo = 0;
+                
                 if (juego.personaje.derecha) {
                     deltaAngulo = -0.05f;
                 }
@@ -127,7 +132,9 @@ public class Figura{
                    }
                 }
                 if (juego.personaje.atras) {
-                    deltaVel = -0.05f;
+                    if(!this.colisionAtras){
+                       deltaVel = -0.05f;
+                   }
                 }
                 
                 if(juego.personaje.corriendo){
@@ -137,8 +144,7 @@ public class Figura{
                 //Se calcula el control con respecto al suelo  (del objeto controlado).
                 float distAlsuelo = radio;
                 float subirBajarPersonaje = controlarAlturaSuelo(t3dPersonaje, juego.explorador, distAlsuelo);
-                
-                float distanciaAlSuelo = -(subirBajarPersonaje-juego.personaje.radio)+0.3f;
+                float distanciaAlSuelo = -(subirBajarPersonaje-juego.personaje.radio)+0.8f;
                 
                 //Se crean un Transform3D con los micro-desplazamientos/rotaciones. 
                 Transform3D t3dNueva = new Transform3D();

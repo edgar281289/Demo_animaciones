@@ -37,7 +37,7 @@ public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
                   //System.out.println("Raton presionada: " + eM.getButton());
                   if( eM.getID() == MouseEvent.MOUSE_CLICKED){
                       if( eM.getButton() == 1){
-                          //personaje.guerra = true;
+                          personaje.guerra = true;                          
                       }
                   }
               }
@@ -47,6 +47,7 @@ public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
                 
                 char caracter = Character.toLowerCase(ek.getKeyChar());
                 if (ek.getID() == KeyEvent.KEY_PRESSED) {
+                                        
                     if (ek.getKeyCode() == 16 ) {
                         personaje.corriendo = true;
                     }
@@ -61,7 +62,6 @@ public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
                     else if (caracter == 's') personaje.atras=true;
                     else if (caracter == 'p') personaje.primeraPersona=true;
                     else if (caracter == 't') personaje.primeraPersona=false;
-                    else if (caracter == 'u') personaje.cambioDeEscenario=true;
                 }
                 else if (ek.getID() == KeyEvent.KEY_RELEASED)   {
                     

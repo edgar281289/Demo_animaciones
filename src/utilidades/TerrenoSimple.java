@@ -22,6 +22,7 @@ public class TerrenoSimple extends BranchGroup {
      */
      public TerrenoSimple(int length, int width, float posX,  float posY, float posZ, String texture, BranchGroup conjunto) {
         BranchGroup ramaTerreno= new BranchGroup();
+        ramaTerreno.setUserData("BG_terreno");
         Transform3D t3Dterreno = new Transform3D();
         t3Dterreno.set(new Vector3f(posX , posY, posZ));
         TransformGroup TGterreno = new TransformGroup(t3Dterreno);

@@ -23,9 +23,8 @@ public class FiguraMDL extends Figura {
     boolean esPersonaje;
     boolean animacion_caminando_lanzada = false;
     boolean animacion_corriendo_lanzada = false;
-    boolean guerra = false;
-    boolean moviendoLaEspada = false;
     public BranchGroup RamaMDL;
+    private boolean moviendoLaEspada;
 
     public FiguraMDL(float radio_, float altura_, String ficheroMDL, float radio, BranchGroup conjunto, ArrayList<Figura> listaObjetos, Juego juego, boolean esPersonaje) {
         super(radio_, altura_, conjunto, listaObjetos, juego);
@@ -54,6 +53,7 @@ public class FiguraMDL extends Figura {
 
     TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala) {
         RamaMDL = new BranchGroup();
+        RamaMDL.setUserData("BG_figura_" + this.identificadorFigura);
         float rotacionX = 0;
         float rotacionY = 0;
         float rotacionZ = 0;
@@ -146,13 +146,16 @@ public class FiguraMDL extends Figura {
 
         if (this.esPersonaje) {
 
-            if (guerra) {
+            if(this.guerra){
                 if (!moviendoLaEspada) {   // la animacion solo se activa una vez.  Luego se desactiva.  No tiene sentido activar varias veces
                     //La animacion ca1slashr es para atacar con la espada una vez. Si la bander es true, es continua
-                    ab.playAnimation("iron_golem:ca1slashr", true);
+                    ab.playAnimation("iron_golem:ca1slashr", false);
                     moviendoLaEspada = true;
+                    atacando = true;
+                    guerra = false;
                 }
             } else {
+                moviendoLaEspada = false;
                 if (juego.personaje.corriendo && animacion_corriendo_lanzada == false) {
                     ab.playAnimation(nombreAnimacionCorriendo, true);
                     animacion_corriendo_lanzada = true;

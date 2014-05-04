@@ -29,8 +29,12 @@ public class Juego extends JFrame implements Runnable {
     Figura perseguidor1;
     Figura perseguidor2;
     public PickTool explorador;
+    BranchGroup TGelefante;
+    BranchGroup BGcaja_0;
+    BranchGroup BGcaja_1;
     
     public Juego() {
+        conjunto.setUserData("conjunto");
         //this.primeraPersona = true;
         Container GranPanel = getContentPane();
         Canvas3D zonaDibujo = new Canvas3D(SimpleUniverse.getPreferredConfiguration());
@@ -45,6 +49,7 @@ public class Juego extends JFrame implements Runnable {
         //universo.getViewingPlatform().setViewPlatformBehavior(B);
 
         BranchGroup escena = crearEscena();
+        escena.setUserData("escena");
         escena.compile();
         universo.getViewingPlatform().setNominalViewingTransform();
         universo.addBranchGraph(escena);
@@ -53,14 +58,17 @@ public class Juego extends JFrame implements Runnable {
 
     BranchGroup crearEscena() {
         BranchGroup objRoot = new BranchGroup();
-        conjunto = new BranchGroup();
 
         explorador = new PickTool(conjunto);
         explorador.setMode(PickTool.GEOMETRY_INTERSECT_INFO);
 
         objRoot.addChild(conjunto);
+        
         conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
         conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        conjunto.setCapability(BranchGroup.ALLOW_DETACH);
+        
         ComportamientoMostrar mostrar = new ComportamientoMostrar(this);
         DirectionalLight LuzDireccional = new DirectionalLight(new Color3f(10f, 10f, 10f), new Vector3f(1f, 0f, -1f));
         BoundingSphere limitesLuz = new BoundingSphere(new Point3d(-15, 10, 15), 100.0); //Localizacion de fuente/paso de luz
@@ -82,16 +90,34 @@ public class Juego extends JFrame implements Runnable {
         perseguidor1 = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, false);
         perseguidor1.crearPropiedades(posX, posY, posZ);
 
-        conjunto.addChild(crearElefante());
-        conjunto.addChild(crearCaja(-15f,1.5f,20.0f,0));
-        conjunto.addChild(crearCaja(-21f,1.5f,25.0f,1));
+        TGelefante = crearElefante();
+        conjunto.addChild(TGelefante);
+        
+        BGcaja_0 = new BranchGroup();
+        BGcaja_0.setUserData("Caja_0");
+        BGcaja_0.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        BGcaja_0.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        BGcaja_0.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        BGcaja_0.setCapability(BranchGroup.ALLOW_DETACH);
+        
+        BGcaja_1 = new BranchGroup();
+        BGcaja_1.setUserData("Caja_1");
+        BGcaja_1.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        BGcaja_1.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        BGcaja_1.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        BGcaja_1.setCapability(BranchGroup.ALLOW_DETACH);
+        
+        BGcaja_0.addChild(crearCaja(-15f,1.5f,20.0f,0));
+        BGcaja_1.addChild(crearCaja(-21f,1.5f,25.0f,1));
+        conjunto.addChild(BGcaja_0);
+        conjunto.addChild(BGcaja_1);
         
         //perseguidor1.velocidades[0]=2.0f;
         //perseguidor1.velocidades[1]=0.0f;
         //perseguidor1.velocidades[0]=1.0f;
         
         FiguraMDL personajeMDL = (FiguraMDL) personaje;
-        Colisiones colisiones = new Colisiones(personajeMDL.RamaMDL, personaje);
+        Colisiones colisiones = new Colisiones(personaje.ramaVisible, personaje, this);
         colisiones.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1000.0));
         conjunto.addChild(colisiones);
         
@@ -108,7 +134,7 @@ public class Juego extends JFrame implements Runnable {
      * 
      * @return 
      */
-    public TransformGroup crearCaja(float pX, float pY, float pZ, int identificador){
+    BranchGroup crearCaja(float pX, float pY, float pZ, int identificador){
 
         Appearance apariencia = new Appearance();
         Texture tex = new TextureLoader(rutaCarpetaProyecto + "Texturas/madera.jpg", this).getTexture(); 
@@ -135,10 +161,18 @@ public class Juego extends JFrame implements Runnable {
         TransformGroup TGcaja = new TransformGroup(trasladarCaja);
         TGcaja.addChild(caja);
         
-        return TGcaja;
+        BranchGroup bg = new BranchGroup();
+        bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        bg.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        bg.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        bg.setCapability(BranchGroup.ALLOW_DETACH);
+        bg.addChild(TGcaja);
+        bg.setUserData("BG_figura_caja_" + identificador);
+        
+        return bg;
     }
     
-    TransformGroup crearElefante(){
+    BranchGroup crearElefante(){
         //Creando un elefenta con luz direccional
         ObjectFile file = new ObjectFile (ObjectFile.RESIZE); Scene scene = null;
         try {scene = file.load(rutaCarpetaProyecto+"elephav.obj");}
@@ -163,7 +197,14 @@ public class Juego extends JFrame implements Runnable {
         elefante.setPickable(true);
         elefante.getChild(0).setUserData("figura_elefante");
         
-        return TGelefante;
+        BranchGroup bg = new BranchGroup();
+        bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        bg.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        bg.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        bg.setCapability(BranchGroup.ALLOW_DETACH);
+        bg.addChild(TGelefante);
+        bg.setUserData("BG_figura_elefante");
+        return bg;
     }
     
     void actualizar(float dt) {
@@ -173,16 +214,19 @@ public class Juego extends JFrame implements Runnable {
         }
         
         Vector3d direccion = personaje.conseguirDireccionFrontal();
+        float cercania = 1.5f;
+        
         if(!primeraPersona){
+            
             colocarCamara(universo,
-                    new Point3d( personaje.posiciones[0] - direccion.getX(), personaje.posiciones[1] - direccion.getY() + personaje.altura, personaje.posiciones[2] - direccion.getZ()),
+                    new Point3d( personaje.posiciones[0] - direccion.getX() * cercania, personaje.posiciones[1] - direccion.getY() + personaje.altura, personaje.posiciones[2] - direccion.getZ() * cercania),
                     new Point3d( personaje.posiciones[0] + direccion.getX(), personaje.posiciones[1] + direccion.getY() + personaje.altura, personaje.posiciones[2] + direccion.getZ())
             );
         }else{
             colocarCamara(universo,
-                    new Point3d( personaje.posiciones[0] + 0.5f, personaje.posiciones[1]  + personaje.altura, personaje.posiciones[2] + 0.5f ),
+                    new Point3d( personaje.posiciones[0] + 0.5f * cercania, personaje.posiciones[1]  + personaje.altura, personaje.posiciones[2] + 0.5f * cercania ),
                     new Point3d( personaje.posiciones[0] + direccion.getX(), personaje.posiciones[1] + direccion.getY() + personaje.altura, personaje.posiciones[2] + direccion.getZ())
-            );            
+            );
         }
         
         //System.out.println("Posicion npc: " + perseguidor1.posiciones[0] + ", " + perseguidor1.posiciones[1] + ", " + perseguidor1.posiciones[2]);
@@ -237,4 +281,5 @@ public class Juego extends JFrame implements Runnable {
         x.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //x.colocarCamara(x.universo, new Point3d(-3, 8f, 22f), new Point3d(3, 0, 0));
     }
+
 }

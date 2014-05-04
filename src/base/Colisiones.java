@@ -26,18 +26,20 @@ public class Colisiones extends Behavior {
 
     int contadorColisiones;
     Figura figura;
+    Juego juego;
     protected Shape3D ObjReferencia;
     protected BranchGroup BranchGroupReferencia;
     protected WakeupCriterion[] Criterios;
     protected WakeupOr CriterioUnificador; /* El resultad de 'OR' de los criterios por separado */
-
+    
     public Colisiones(Shape3D _ObjetoReferencia, Figura p) {
         figura = p;
         ObjReferencia = _ObjetoReferencia;
         setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
     }
 
-    public Colisiones(BranchGroup _BranchGroupReferencia, Figura p) {
+    public Colisiones(BranchGroup _BranchGroupReferencia, Figura p, Juego juego) {
+        this.juego = juego;
         figura = p;
         BranchGroupReferencia = _BranchGroupReferencia;
         setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
@@ -60,9 +62,25 @@ public class Colisiones extends Behavior {
             WakeupCriterion theCriterion = (WakeupCriterion) criteria.nextElement();
             if (theCriterion instanceof WakeupOnCollisionEntry) {
                 Node theLeaf = ((WakeupOnCollisionEntry) theCriterion).getTriggeringPath().getObject();
-                //System.out.println("El " + BranchGroupReferencia.getClass().getName() + " golpeo con " + theLeaf.getUserData());
+                System.out.println("El " + BranchGroupReferencia.getClass().getName() + " golpeo con " + theLeaf.getUserData() + " de tipo: " + theLeaf.getClass());
+                
+                // @todo - arreglar para que se elimine el objeto cuando se golpee
+                if(theLeaf.getUserData().equals("figura_caja_0") && juego.personaje.atacando){
+                    //juego.BGcajas.removeChild(0);
+                    //juego.borrarElemento("figura_caja_0");
+                    //juego.eliminarNodo(juego.BGcajas, 0, juego, "figura_caja_0", juego.conjunto);
+                    juego.conjunto.removeChild(juego.BGcaja_0);
+                    juego.personaje.atacando = false;
+                }else if(theLeaf.getUserData().equals("figura_caja_1") && juego.personaje.atacando){
+                    //juego.borrarElemento("figura_caja_1");
+                    //juego.eliminarNodo(juego.BGcajas, 0, juego, "figura_caja_1", juego.conjunto);
+                    juego.conjunto.removeChild(juego.BGcaja_1);
+                    juego.personaje.atacando = false;
+                }
+                //conjunto.removeChild(BGcajas);
+                
                 //contadorColisiones++;
-            } else if (theCriterion instanceof WakeupOnCollisionExit) { /*.. codigo si la sale de la colision ...*/
+            } else if (theCriterion instanceof WakeupOnCollisionExit) {
                 figura.colisionDelante = false;
                 figura.colisionAtras = false;
                 figura.colisionIzquierda = false;
