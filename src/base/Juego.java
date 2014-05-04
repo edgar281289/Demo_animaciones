@@ -82,14 +82,14 @@ public class Juego extends JFrame implements Runnable {
         objRoot.addChild(mostrar);
 
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
-        float radio = 1f, posX = 0f, posY = 0.3f, posZ = 0f;
+        float radio = 1f, posX = 0f, posY = 0.8f, posZ = 0f;
         personaje = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
         personaje.crearPropiedades(posX, posY, posZ);
         
         radio = 1f; posX = 0.0f; posY = 0.8f; posZ = 15.0f;
         perseguidor1 = new FiguraMDL(0.4f, 3.0f, "objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, false);
         perseguidor1.crearPropiedades(posX, posY, posZ);
-
+        
         TGelefante = crearElefante();
         conjunto.addChild(TGelefante);
         
@@ -116,10 +116,13 @@ public class Juego extends JFrame implements Runnable {
         //perseguidor1.velocidades[1]=0.0f;
         //perseguidor1.velocidades[0]=1.0f;
         
-        FiguraMDL personajeMDL = (FiguraMDL) personaje;
-        Colisiones colisiones = new Colisiones(personaje.ramaVisible, personaje, this);
-        colisiones.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1000.0));
-        conjunto.addChild(colisiones);
+        Colisiones colisionesPersonaje = new Colisiones(personaje.ramaVisible, personaje, this);
+        colisionesPersonaje.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1000.0));
+        conjunto.addChild(colisionesPersonaje);
+        
+        Colisiones colisionesPerseguidor = new Colisiones(personaje.ramaVisible, perseguidor1, this);
+        colisionesPerseguidor.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1000.0));
+        conjunto.addChild(colisionesPerseguidor);
         
         //perseguidor = new Esfera (radio, "texturas//bosques2.jpg", conjunto, listaObjetosFisicos, this);
         //perseguidor.crearPropiedades( 3, 0, 0);

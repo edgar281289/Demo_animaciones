@@ -53,7 +53,6 @@ public class FiguraMDL extends Figura {
 
     TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala) {
         RamaMDL = new BranchGroup();
-        RamaMDL.setUserData("BG_figura_" + this.identificadorFigura);
         float rotacionX = 0;
         float rotacionY = 0;
         float rotacionZ = 0;

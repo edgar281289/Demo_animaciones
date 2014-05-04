@@ -75,7 +75,10 @@ public class CapabilitiesMDL {
                 }
                 if ((objeto instanceof Shape3D) && (nivel < 100)) {
                     ((Shape3D) objeto).setUserData(etiqueta);
-
+                    
+                    PickTool.setCapabilities(((Shape3D) objeto), PickTool.INTERSECT_FULL);
+                    ((Shape3D) objeto).setPickable(true);
+                
                     //ColisionDetector2 cd = new ColisionDetector2 ((Shape3D) objeto, fp.limites, fp);
                     //  ((Shape3D) objeto).setCapability(Node.ENABLE_PICK_REPORTING);
                     //PickTool.setCapabilities( ((Shape3D) objeto), PickTool.INTERSECT_FULL);
@@ -99,6 +102,9 @@ public class CapabilitiesMDL {
                 }
                 if ((objeto instanceof Shape3D) && (nivel < 100)) {
                     ((Shape3D) objeto).setUserData(etiqueta);
+                    PickTool.setCapabilities(((Shape3D) objeto), PickTool.INTERSECT_FULL);
+                    ((Shape3D) objeto).setPickable(true);
+                
                     //ColisionDetector2 cd = new ColisionDetector2 ((Shape3D) objeto, fp.limites, fp);
                     //  ((Shape3D) objeto).setCapability(Node.ENABLE_PICK_REPORTING);
                     //    PickTool.setCapabilities( ((Shape3D) objeto), PickTool.INTERSECT_FULL);

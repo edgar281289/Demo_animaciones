@@ -62,22 +62,26 @@ public class Colisiones extends Behavior {
             WakeupCriterion theCriterion = (WakeupCriterion) criteria.nextElement();
             if (theCriterion instanceof WakeupOnCollisionEntry) {
                 Node theLeaf = ((WakeupOnCollisionEntry) theCriterion).getTriggeringPath().getObject();
-                System.out.println("El " + BranchGroupReferencia.getClass().getName() + " golpeo con " + theLeaf.getUserData() + " de tipo: " + theLeaf.getClass());
+                //System.out.println("El " + BranchGroupReferencia.getClass().getName() + " golpeo con " + theLeaf.getUserData() + " de tipo: " + theLeaf.getClass());
                 
-                // @todo - arreglar para que se elimine el objeto cuando se golpee
+                //System.out.println("juego.personaje.atacando " + juego.personaje.atacando);
                 if(theLeaf.getUserData().equals("figura_caja_0") && juego.personaje.atacando){
-                    //juego.BGcajas.removeChild(0);
-                    //juego.borrarElemento("figura_caja_0");
-                    //juego.eliminarNodo(juego.BGcajas, 0, juego, "figura_caja_0", juego.conjunto);
                     juego.conjunto.removeChild(juego.BGcaja_0);
                     juego.personaje.atacando = false;
                 }else if(theLeaf.getUserData().equals("figura_caja_1") && juego.personaje.atacando){
-                    //juego.borrarElemento("figura_caja_1");
-                    //juego.eliminarNodo(juego.BGcajas, 0, juego, "figura_caja_1", juego.conjunto);
                     juego.conjunto.removeChild(juego.BGcaja_1);
                     juego.personaje.atacando = false;
+                }else if(theLeaf.getUserData().equals("figura_0") && figura.identificadorFigura == 1){
+                    /*
+                    figura.guerra = true;
+                    figura.quieto = true;
+                    figura.caminando = false;
+                    figura.buscando = false;
+                    */
+                    // El juego finaliza cuando colisionan los dos golems
+                    juego.estadoJuego = -1;
                 }
-                //conjunto.removeChild(BGcajas);
+                
                 
                 //contadorColisiones++;
             } else if (theCriterion instanceof WakeupOnCollisionExit) {
