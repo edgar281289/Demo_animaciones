@@ -260,6 +260,7 @@ public class Juego extends JFrame implements Runnable {
             } catch (Exception e) {
             }
         }
+        System.out.println("Te han pillado!");
     }
 
     void colocarCamara(SimpleUniverse universo, Point3d posicionCamara, Point3d objetivoCamara) {
