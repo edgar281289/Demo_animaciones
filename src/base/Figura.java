@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 //public class Figura extends Shape3D{
+/**
+ * 
+ * @author Edgar Pérez Ferrando
+ */
 public class Figura {
 
     float dt, radio, altura;
@@ -96,7 +100,7 @@ public class Figura {
         }
     }
 
-    public void actualizar(float dt) {
+    public void actualizar() {
         Transform3D t3dPersonaje = new Transform3D();
         desplazamientoFigura.getTransform(t3dPersonaje);
         Transform3D copiat3dPersonaje = new Transform3D(t3dPersonaje);
@@ -106,7 +110,7 @@ public class Figura {
         float distAlsuelo = radio;
         float subirBajarPersonaje = controlarAlturaSuelo(t3dPersonaje, juego.explorador, distAlsuelo);
         float distanciaAlSuelo = -(subirBajarPersonaje - this.radio) + 0.8f;
-        
+                
         if (identificadorFigura != 0) {
             
             if (this.identificadorFigura == 1 && !this.buscando && !this.guerra) {
@@ -219,11 +223,8 @@ public class Figura {
                         this.posicionesDestino[0] = juego.personaje.posiciones[0];
                         this.posicionesDestino[2] = juego.personaje.posiciones[2];
 
-                        if (this.posicionesDestino[2] > this.posiciones[2]) {
-                            limite = 1;
-                        } else {
-                            limite = -1;
-                        }
+                        if (this.posicionesDestino[2] > this.posiciones[2]) limite = 1;
+                        else limite = -1;
                     }
                 }
 

@@ -13,6 +13,10 @@ import javax.vecmath.*;
 import net.sf.nwn.loader.AnimationBehavior;
 import net.sf.nwn.loader.NWNLoader;
 
+/**
+ * 
+ * @author Edgar Pérez Ferrando
+ */
 public class FiguraMDL extends Figura {
 
     public Scene escenaPersonaje1;
@@ -140,10 +144,10 @@ public class FiguraMDL extends Figura {
         return rotadorDeFIguraMDL;
     }
 
-    public void actualizar(float dt) {
-        super.actualizar(dt);
+    public void actualizar() {
+        super.actualizar();
 
-        if (this.esPersonaje) {
+        //if (this.esPersonaje) {
 
             if(this.guerra){
                 if (!moviendoLaEspada) {   // la animacion solo se activa una vez.  Luego se desactiva.  No tiene sentido activar varias veces
@@ -155,19 +159,19 @@ public class FiguraMDL extends Figura {
                 }
             } else {
                 moviendoLaEspada = false;
-                if (juego.personaje.corriendo && animacion_corriendo_lanzada == false) {
+                if (this.corriendo && animacion_corriendo_lanzada == false) {
                     ab.playAnimation(nombreAnimacionCorriendo, true);
                     animacion_corriendo_lanzada = true;
-                } else if (juego.personaje.caminando && (animacion_caminando_lanzada == false)) {
+                } else if (this.caminando && (animacion_caminando_lanzada == false)) {
                     ab.playAnimation(nombreAnimacionCaminando, true);
                     animacion_caminando_lanzada = true;
                     animacion_corriendo_lanzada = false;
-                } else if ((juego.personaje.quieto && animacion_caminando_lanzada == true) || juego.personaje.quieto && animacion_corriendo_lanzada == true) {
+                } else if ((this.quieto && animacion_caminando_lanzada == true) || this.quieto && animacion_corriendo_lanzada == true) {
                     ab.playAnimation(nombreAnimacionQuieto, true);
                     animacion_corriendo_lanzada = false;
                     animacion_caminando_lanzada = false;
                 }
             }
-        }
+        //}
     }
 }

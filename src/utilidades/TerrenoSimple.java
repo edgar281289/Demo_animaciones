@@ -7,6 +7,10 @@ import java.util.Random;
 import java.util.ArrayList;
 
 //Esta es una adaptacion de la clase SimpleLand.java, conviertiéndola en un figura fisica JBullet
+/**
+ * 
+ * @author Edgar PÈrez Ferrando
+ */
 public class TerrenoSimple extends BranchGroup {
     Point3f[] pts;
     int[] stripCounts;

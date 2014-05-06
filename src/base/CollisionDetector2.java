@@ -20,9 +20,9 @@ import javax.vecmath.Point3d;
 
 /**
  *
- * @author Sobremesa
+ * @author Edgar Pérez Ferrando
  */
-public class Colisiones extends Behavior {
+public class CollisionDetector2 extends Behavior {
 
     int contadorColisiones;
     Figura figura;
@@ -32,13 +32,15 @@ public class Colisiones extends Behavior {
     protected WakeupCriterion[] Criterios;
     protected WakeupOr CriterioUnificador; /* El resultad de 'OR' de los criterios por separado */
     
-    public Colisiones(Shape3D _ObjetoReferencia, Figura p) {
+    /*
+    public CollisionDetector2(Shape3D _ObjetoReferencia, Figura p) {
         figura = p;
         ObjReferencia = _ObjetoReferencia;
         setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
     }
-
-    public Colisiones(BranchGroup _BranchGroupReferencia, Figura p, Juego juego) {
+    */
+    
+    public CollisionDetector2(BranchGroup _BranchGroupReferencia, Figura p, Juego juego) {
         this.juego = juego;
         figura = p;
         BranchGroupReferencia = _BranchGroupReferencia;
@@ -71,15 +73,15 @@ public class Colisiones extends Behavior {
                 }else if(theLeaf.getUserData().equals("figura_caja_1") && juego.personaje.atacando){
                     juego.conjunto.removeChild(juego.BGcaja_1);
                     juego.personaje.atacando = false;
-                }else if(theLeaf.getUserData().equals("figura_0") && figura.identificadorFigura == 1){
-                    /*
+                }else if((theLeaf.getUserData().equals("figura_0") && figura.identificadorFigura == 1) || 
+                        (theLeaf.getUserData().equals("figura_1") && figura.identificadorFigura == 0)){
+                    
+                    if(figura.atacando) juego.estadoJuego = -1;
                     figura.guerra = true;
                     figura.quieto = true;
                     figura.caminando = false;
                     figura.buscando = false;
-                    */
                     // El juego finaliza cuando colisionan los dos golems
-                    juego.estadoJuego = -1;
                 }
                 
                 

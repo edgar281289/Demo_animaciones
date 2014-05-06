@@ -6,6 +6,10 @@ import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import javax.media.j3d.*;
 
+/**
+ * 
+ * @author Edgar Pérez Ferrando
+ */
 public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
     Figura personaje;
     WakeupOnAWTEvent    presionada = new WakeupOnAWTEvent(KeyEvent.KEY_PRESSED);
