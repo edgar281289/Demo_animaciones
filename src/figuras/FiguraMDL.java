@@ -78,7 +78,7 @@ public class FiguraMDL extends Figura {
                 nombreAnimacionCorriendo = "iron_golem:crun";
                 nombreAnimacionCaminando = "iron_golem:cwalk";
                 nombreAnimacionQuieto = "iron_golem:cpause1";
-                nombreAnimacionLuchando = "iron_golem:run";//"iron_golem:ca1slashl";
+                nombreAnimacionLuchando = "iron_golem:ca1slashl";
                 rotacionX = -1.5f;
                 rotacionZ = 3.14f;
                 escalaTamano = 0.65f;
@@ -150,9 +150,8 @@ public class FiguraMDL extends Figura {
         //if (this.esPersonaje) {
 
             if(this.guerra){
-                if (!moviendoLaEspada) {   // la animacion solo se activa una vez.  Luego se desactiva.  No tiene sentido activar varias veces
-                    //La animacion ca1slashr es para atacar con la espada una vez. Si la bander es true, es continua
-                    ab.playAnimation("iron_golem:ca1slashr", false);
+                if (!moviendoLaEspada) {
+                    ab.playAnimation(nombreAnimacionLuchando, false);
                     moviendoLaEspada = true;
                     atacando = true;
                     guerra = false;

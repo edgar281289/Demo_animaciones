@@ -2,15 +2,8 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Sobremesa/Documents/NetBeansProjects/Demo_animaciones/src/utilidades/TerrenoSimple.java</file>
-            <file>file:/C:/Users/Sobremesa/Documents/NetBeansProjects/Demo_animaciones/src/base/Figura.java</file>
-            <file>file:/C:/Users/Sobremesa/Documents/NetBeansProjects/Demo_animaciones/src/utilidades/CapabilitiesMDL.java</file>
-            <file>file:/C:/Users/Sobremesa/Documents/NetBeansProjects/Demo_animaciones/src/figuras/FiguraMDL.java</file>
-            <file>file:/C:/Users/Sobremesa/Documents/NetBeansProjects/Demo_animaciones/src/base/Juego.java</file>
-            <file>file:/C:/Users/Sobremesa/Documents/NetBeansProjects/Demo_animaciones/src/base/DeteccionControlPersonaje.java</file>
-            <file>file:/C:/Users/Sobremesa/Documents/NetBeansProjects/Demo_animaciones/src/base/ComportamientoMostrar.java</file>
-            <file>file:/C:/Users/Sobremesa/Documents/NetBeansProjects/Demo_animaciones/src/base/CollisionDetector2.java</file>
-        </group>
+        <group/>
+        <group name="TAW"/>
+        <group name="Videojuegos"/>
     </open-files>
 </project-private>

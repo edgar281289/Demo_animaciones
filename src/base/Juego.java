@@ -53,6 +53,9 @@ public class Juego extends JFrame implements Runnable {
     BranchGroup TGelefante;
     BranchGroup BGcaja_0;
     BranchGroup BGcaja_1;
+    BranchGroup BGsonido;
+    public boolean caja1 = false;
+    public boolean caja2 = false;
 
     public Juego() {
         conjunto.setUserData("conjunto");
@@ -113,7 +116,10 @@ public class Juego extends JFrame implements Runnable {
             System.out.println("problema de audio");
         }
         String ficheroSonido = rutaCarpetaProyecto + "/sonidos/choco.mid";
-        anadirSonidoARama(conjunto, ficheroSonido);
+        BGsonido = new BranchGroup();
+        BGsonido.setCapability(BranchGroup.ALLOW_DETACH);
+        anadirSonidoARama(BGsonido, ficheroSonido);
+        conjunto.addChild(BGsonido);
         
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float radio = 1f, posX = 0f, posY = 0.8f, posZ = 0f;
@@ -311,6 +317,7 @@ public class Juego extends JFrame implements Runnable {
     }
     
     void mensaje_fin_del_juego() {
+        
         Font3D font3d = new Font3D(new Font("Helvetica", Font.ITALIC, 2), 5, new FontExtrusion());
         Text3D textGeom = new Text3D(font3d, new String("Fin del juego"), new Point3f(0,0,0));
         Shape3D textShape = new Shape3D(textGeom);
@@ -331,7 +338,13 @@ public class Juego extends JFrame implements Runnable {
                 new Point3d(5.0f, 1.0f, -20.0f),
                 new Point3d(-5.0f, 1.0f, 20.0f)
         );
-    }
+        
+        BranchGroup BGfanfare = new BranchGroup();
+        conjunto.removeChild(BGsonido);
+        anadirSonidoARama(BGfanfare, rutaCarpetaProyecto + "/sonidos/fanfare.mid");
+        conjunto.addChild(BGfanfare);
+    }   
+    
 
     void colocarCamara(SimpleUniverse universo, Point3d posicionCamara, Point3d objetivoCamara) {
         posicionCamara = new Point3d(posicionCamara.x + 0.001, posicionCamara.y + 0.001d, posicionCamara.z + 0.001);

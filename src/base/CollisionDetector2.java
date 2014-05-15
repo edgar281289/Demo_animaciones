@@ -70,9 +70,13 @@ public class CollisionDetector2 extends Behavior {
                 if(theLeaf.getUserData().equals("figura_caja_0") && juego.personaje.atacando){
                     juego.conjunto.removeChild(juego.BGcaja_0);
                     juego.personaje.atacando = false;
+                    juego.caja1 = true;
+                    if(juego.caja1 && juego.caja2) juego.estadoJuego = -1;
                 }else if(theLeaf.getUserData().equals("figura_caja_1") && juego.personaje.atacando){
                     juego.conjunto.removeChild(juego.BGcaja_1);
                     juego.personaje.atacando = false;
+                    juego.caja2 = true;
+                    if(juego.caja1 && juego.caja2) juego.estadoJuego = -1;
                 }else if((theLeaf.getUserData().equals("figura_0") && figura.identificadorFigura == 1) || 
                         (theLeaf.getUserData().equals("figura_1") && figura.identificadorFigura == 0)){
                     
